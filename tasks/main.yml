@@ -1,0 +1,36 @@
+---
+# tasks file for demoglot.jenkins
+- name: Install java
+  yum: name=java state=present
+- name: Enable jenkins repo
+  get_url: url=http://pkg.jenkins-ci.org/redhat/jenkins.repo dest=/etc/yum.repos.d/jenkins.repo
+- name: Import jenkins key
+  rpm_key:
+    key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+    state: present
+    validate_certs: no
+
+- name: Install Jenkins
+  yum: name=jenkins state=present
+
+- name: Start service
+  service: name=jenkins state=started
+
+- name: install epel-release
+  yum: name=epel-release state=present
+- name: install required packages
+  yum: name={{item}} state=present
+  with_items:
+    - python-pip
+    - awscli
+    - ansible
+    - maven 
+    - git 
+    - java-1.8.0-openjdk-devel.x86_64 
+
+#- name: Make sure the plugin is always up-to-date
+  #jenkins_plugin:
+    #name: bitbucket
+    #state: latest
+
+
